@@ -12,7 +12,7 @@ def read_number():
         print("Ошибка. Введи число")
         return read_number()
 
-
+# Создание массива
 def create_array():
     print("Количество элементов в массиве равно ?")
     n = read_number()
@@ -23,7 +23,7 @@ def create_array():
         array.append(number)
     return array
 
-
+# Поиск позиции наименьшего по модулю отрицательного элемента массива
 def search_for_position(array):
     filtered_array = [(abs(array[i]), i) for i in range(len(array)) if array[i] < 0]
     if len(filtered_array) == 0:
