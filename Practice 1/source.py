@@ -1,7 +1,7 @@
 def main():
     array = create_array()
-    search_for_position(array)
-
+    position = search_for_position(array)
+    print(f'Result = {position}')
 
 # Считывание числа у пользователя
 def read_number():
@@ -25,15 +25,17 @@ def create_array():
 
 
 def search_for_position(array):
-    filtered_array = [abs(i) for i in range(len(array)) if i < 0]
+    filtered_array = [(abs(array[i]), i) for i in range(len(array)) if array[i] < 0]
     if len(filtered_array) == 0:
         return -1
-    minimum = filtered_array[0]
-    position = 0
+    minimum = filtered_array[0][0]
+    position = filtered_array[0][1]
     for i in range(len(filtered_array)):
-        if filtered_array[i] < minimum:
-            minimum = filtered_array[i]
-            position = i
+        value = filtered_array[i][0]
+        index = filtered_array[i][1]
+        if value < minimum:
+            minimum = value
+            position = index
     return position
 
 
