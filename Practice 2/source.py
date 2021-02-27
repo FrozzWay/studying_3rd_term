@@ -1,16 +1,7 @@
 class Record:
     def __init__(self, data):
-        self.id = data.get("id")
-        self.surname = data.get("surname", "")
-        self.reg_number = data.get("reg_number", "")
-        self._from = data.get("from", "")
-        self.up_to = data.get("up_to", "")
-        self.rate = data.get("rate", "")
-        self.copy_of_data = data
+        self.data = data
         self.next = None
-
-    def __getitem__(self, key):
-        return getattr(self, key)
 
 
 class Collection:
@@ -54,24 +45,49 @@ class Collection:
         current.next = tmp
 
     def output(self):
-        current = self.first
+        current = self.sorted_first
         while current is not None:
-            for key, val in current.copy_of_data.items():
+            for key, val in current.data.items():
                 print(f'{key}: {val}')
             current = current.next
 
-    def sort(self, key):
-        current_unsorted = self.first
-        current_sorted = Record(self.first.copy_of_data)
+    def sort(self, criteria):
+        current_unsorted = self.first.next  # 2й элемент исходного списка
+        self.sorted_first = Record(self.first.data)  # Копирование первого элемента в результирующий список
 
-        # Берем каждый элемент по порядку из неотсортерованного списка (element)
+        # Берем каждый элемент по порядку из неотсортерованного списка (element) начиная со 2го
         while current_unsorted is not None:
-            # element <= first el.
-            if current_unsorted[key] <= current_sorted[key]:
-                pass
+            tmp = Record(current_unsorted.data)
+            self._compare_and_put(tmp, criteria)
+            # move next
             current_unsorted = current_unsorted.next
+
+    def _compare_and_put(self, tmp, criteria):
+        current_sorted = self.sorted_first
+        # element <= first el.
+        if tmp.data[criteria] <= current_sorted.data[criteria]:
+            tmp.next = current_sorted
+            self.sorted_first = tmp
+            return
+        # element > first el.
+        while True:
+            # element > last el.
+            if current_sorted.next is None:
+                tmp.next = None
+                current_sorted.next = tmp
+                return
+            # prev. el. < element <= next el.
+            if current_sorted.data[criteria] < tmp.data[criteria] <= current_sorted.next.data[criteria]:
+                tmp2 = current_sorted.next
+                current_sorted.next = tmp
+                tmp.next = tmp2
+                return
+
+            current_sorted = current_sorted.next
 
 
 collection = Collection()
 collection.fill()
 collection.output()
+
+collection.sort("surname")
