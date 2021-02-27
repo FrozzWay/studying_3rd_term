@@ -15,7 +15,8 @@ class Collection:
             stop_input = False
 
             data = dict()
-            keys = ("surname", "reg_number", "from", "up_to", "rate")
+            #keys = ("surname", "reg_number", "from", "up_to", "rate")
+            keys = ("surname",)
 
             data['id'] = id
             id += 1
@@ -44,11 +45,23 @@ class Collection:
             current = current.next
         current.next = tmp
 
-    def output(self):
-        current = self.sorted_first
+    def output(self, x):
+        if x:
+            current = self.first
+        else:
+            current = self.sorted_first
         while current is not None:
             for key, val in current.data.items():
                 print(f'{key}: {val}')
+            print('')
+            current = current.next
+
+    def search(self, criteria, value):
+        current = self.first
+        while current is not None:
+            if current.data[criteria] == value:
+                for key, val in current.data.items():
+                    print(f'{key}: {val}')
             current = current.next
 
     def sort(self, criteria):
@@ -87,7 +100,3 @@ class Collection:
 
 
 collection = Collection()
-collection.fill()
-collection.output()
-
-collection.sort("surname")
